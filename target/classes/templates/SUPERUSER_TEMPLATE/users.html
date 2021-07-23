@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+	crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+	integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+	crossorigin="anonymous"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+	integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+	crossorigin="anonymous"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+	integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+	crossorigin="anonymous"></script>
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Users</title>
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<a class="navbar-brand" th:href="@{/SUPERUSER/home}">Home</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse"
+			data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown"
+			aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNavDropdown">
+			<ul class="navbar-nav">
+				<li class="nav-item"><a class="nav-link"
+					th:href="@{/SUPERUSER/list}">Users</a> <span class="sr-only"></span>
+				</li>
+			
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle" href="#"
+					id="navbarDropdownMenuLink" data-toggle="dropdown"
+					aria-haspopup="true" aria-expanded="false"> Protocol </a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+						<a class="dropdown-item" data-toggle="modal"
+							data-target="#createprotocol">Create Protocol</a> <a
+							class="dropdown-item" th:href="@{/SUPERUSER/showProtocols}">Show
+							Protocol</a>
+					</div></li>
+
+
+			</ul>
+		</div>
+		<a type="button" class="btn btn-secondary"
+			th:href="@{/SUPERUSER/logout}">Log Out</a>
+	</nav>
+	
+	<div class="modal fade" id="createprotocol" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<form th:action="@{/SUPERUSER/createprotocol}" method=post enctype="multipart/form-data">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Add New Protocol</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						
+						
+					</div>
+					<div class="modal-body">
+
+						<div class="form-group">
+							<label for="type">Type:</label> <select class="form-control"
+								id="typeAdd" name="type">
+								<option>Incoming</option>
+								<option>Outgoing</option>
+							</select>
+						</div>
+
+
+						<div class="form-group">
+							<label for="title" class="col-form-label">Title:</label> <input
+								type="text" class="form-control" id="titleAdd" name="title">
+						</div>
+
+						<div class="form-group">
+							<label for="description">Description</label>
+							<textarea class="form-control" id="descriptionAdd"  rows="3" name="description"></textarea>
+						</div>
+						
+						<div class="form-group">
+							<label for="followUp">FollowUp</label>
+							<textarea class="form-control" id="followAdd" rows="10"
+								name="followup"></textarea>
+						</div>
+
+						
+						<div class="form-group">
+							<label for="exampleFormControlFile1"><br><br>If you want to add more than two files you have to compress them.You can also fill it empty </label> 
+							<input type="file" class="form-control-file"
+								id="exampleFormControlFile1" name="file">
+						</div>
+						
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-dismiss="modal">Close</button>
+							<button type="submit" class="btn btn-primary">Send</button>
+						</div>
+
+					</div>
+
+
+
+
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<blockquote class="blockquote text-center">
+		<p class="mb-0" style="font-size: 50px">List of Users</p>
+		<footer class="blockquote-footer" style="font-size: 12px">
+			<cite>Feel free to Create,Read,Update,Delete a User :) </cite>
+		</footer>
+	</blockquote>
+
+	<div class="container">
+		<button type="button" class="btn btn-primary" data-toggle="modal"
+			data-target="#addmodal">Add New</button>
+
+
+
+
+		<table class="table table-stripped">
+			<tr>
+				<td>ID</td>
+				<td>FirstName</td>
+				<td>LastName</td>
+				<td>UserName</td>
+				<td>Role</td>
+				<td>Sector</td>
+				<td>Active</td>
+				<td>Edit</td>
+				<td>Delete
+			</tr>
+
+			<tr th:each="user: ${users}">
+				<td th:text="${user.id}">ID</td>
+				<td th:text="${user.firstName}">FirstName</td>
+				<td th:text="${user.lastName}">LastName</td>
+				<td th:text="${user.username}">UserName</td>
+				<td th:text="${user.role.name}">Role</td>
+				<td th:text="${user.sector.name}">Sector</td>
+				<td th:text="${user.active}">Active</td>
+				<td><a th:href="@{/SUPERUSER/editUser(id=${user.id})}"
+					class="btn btn-warning">Edit</a></td>
+				<td><a th:href="@{/SUPERUSER/deleteUser(id=${user.id})}"
+					class="btn btn-danger btn-sm">Delete</a></td>
+
+
+
+			</tr>
+
+		</table>
+	</div>
+
+
+
+
+	<div class="modal fade" id="addmodal" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<form th:action="@{/SUPERUSER/addNewUser}" method=post>
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Add New User</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+
+
+
+						<div class="form-group">
+							<label for="firstName" class="col-form-label">FirstName:</label>
+							<input type="text" class="form-control" id="firstNameAdd"
+								name="firstName">
+						</div>
+						<div class="form-group">
+							<label for="lastName" class="col-form-label">LastName:</label> <input
+								type="text" class="form-control" id="lastNameAdd"
+								name="lastName">
+						</div>
+
+						<div class="form-group">
+							<label for="username" class="col-form-label">UserName:</label> <input
+								type="text" class="form-control" id="usernameAdd"
+								name="username">
+						</div>
+
+						<div class="form-group">
+							<label for="password" class="col-form-label">Password:</label> <input
+								type="password" class="form-control" id="passwordAdd"
+								name="password">
+						</div>
+
+						<div class="form-group">
+							<label for="active">Active Select(1 for No Expired, 0 for
+								Expired) </label> <select class="form-control" id="activeAdd"
+								name="active">
+								<option>1</option>
+								<option>0</option>
+							</select>
+						</div>
+
+						<div class="form-group">
+							<label for="role">Role select</label> <select
+								class="form-control" id="roleAdd" name="role">
+								<option th:each="role : ${roles}" th:value="${role.id}"
+									th:text="${role.name}">
+								<option />
+							</select>
+						</div>
+
+
+						<div class="form-group">
+							<label for="sector">Sector select</label> <select
+								class="form-control" id="sectorAdd" name="sector">
+								<option th:each="sector : ${sectors}" th:value="${sector.id}"
+									th:text="${sector.name}">
+								<option />
+							</select>
+						</div>
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-primary">Save</button>
+					</div>
+
+				</div>
+			</div>
+		</form>
+	</div>
+
+</body>
+</html>
