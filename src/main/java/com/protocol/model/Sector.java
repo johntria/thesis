@@ -1,15 +1,13 @@
 package com.protocol.model;
+import org.springframework.data.annotation.Transient;
 
+import java.lang.String;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "SECTOR")
@@ -21,6 +19,10 @@ public class Sector {
 
 	@Column(name = "sector_name")
 	private String name;
+
+	@ElementCollection
+	private Map<String,Integer> protocol_type = new HashMap<String,Integer>();
+
 
 	@OneToMany(mappedBy = "sector")
 	private Collection<User> user = new ArrayList<>();
@@ -64,5 +66,8 @@ public class Sector {
 	public void setUser(Collection<User> user) {
 		this.user = user;
 	}
+
+
+
 
 }

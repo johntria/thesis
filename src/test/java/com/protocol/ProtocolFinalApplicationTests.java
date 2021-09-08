@@ -1,5 +1,6 @@
 package com.protocol;
 
+import java.util.Collection;
 import java.util.List;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -34,8 +35,13 @@ class ProtocolFinalApplicationTests {
 	SectorService sectorService;
 	@Autowired
 	ProtocolService protocolService;
+	@Autowired
+	ProtocolRepository protocolRepository;
 
 	@Test
 	void contextLoads() {
+		System.out.println(protocolRepository.findLatestProtocolByType("Incoming").getId());
+
+
 	}
 }

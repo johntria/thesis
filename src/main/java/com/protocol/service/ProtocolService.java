@@ -2,6 +2,8 @@ package com.protocol.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.protocol.model.Protocol;
@@ -83,5 +85,17 @@ public class ProtocolService {
 	public List<Protocol> getProtocolBycreatedFromUser(User user) {
 		return protocolRepository.getProtocolBycreatedFromUser(user);
 	}
+
+	public String getLatestTimeByTypeOfProtocol(String type){
+		Protocol tmp=protocolRepository.findLatestProtocolByType(type);
+		if (Objects.isNull(tmp)){
+			return null;
+		}else{
+			return tmp.getdateCreated();
+		}
+
+	}
+
+
 
 }

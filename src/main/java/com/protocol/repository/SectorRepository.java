@@ -7,5 +7,4 @@ import com.protocol.model.Sector;
 @Repository
 public interface SectorRepository extends JpaRepository<Sector, Long> {
 	Sector findByName(String name);
-
 }

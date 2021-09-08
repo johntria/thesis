@@ -161,6 +161,7 @@ public class ControllerGODUSER {
 			@RequestParam("file") MultipartFile file) throws IllegalStateException, IOException {
 
 		User logeInUser = userService.getUserByName(name);
+		Sector sectorOflogeInUser= sectorService.getSectorById(logeInUser.getSector().getId());
 		Protocol tmp_protocol;
 
 		if (!file.isEmpty()) {
@@ -169,7 +170,6 @@ public class ControllerGODUSER {
 			FileOfProtocol tmp_file = new FileOfProtocol(file.getOriginalFilename(), (long) file.getSize());
 
 			fileService.addFile(tmp_file);
-
 			tmp_protocol = new Protocol(logeInUser, followup, type, title, description, tmp_file);
 
 		} else {

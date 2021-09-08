@@ -21,4 +21,9 @@ public interface ProtocolRepository extends JpaRepository<Protocol, Long> {
 	@Query("SELECT u FROM Protocol u WHERE u.createdFromUser.sector=:sector")
 	Collection<Protocol> findProtocolByUserSector(@Param("sector") Sector sector);
 
+	@Query(value ="SELECT * FROM protocol u WHERE u.type = ?1 ORDER BY u.id DESC LIMIT 1",nativeQuery = true)
+	Protocol findLatestProtocolByType(String type);
+
+
+
 }
