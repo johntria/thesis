@@ -4,10 +4,13 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.protocol.model.Sector;
+import com.protocol.service.SectorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.stereotype.Controller;
@@ -33,6 +36,9 @@ import com.protocol.service.UserService;
 public class ControllerUSER {
 
 	@Autowired
+	private SectorService sectorService;
+
+	@Autowired
 	private UserService userService;
 
 	@Autowired
@@ -54,7 +60,27 @@ public class ControllerUSER {
 	@GetMapping("/USER/showProtocols")
 	public String showProtocols(Model model, @CurrentSecurityContext(expression = "authentication.name") String name) {
 		User tmp_user = userService.getUserByName(name);
-		List<Protocol> protocols = protocolService.getProtocolsBySector(tmp_user.getSector());
+		List<Protocol> protocols = protocolService.getProtocolBySector(tmp_user.getSector().getId());
+		model.addAttribute("user", tmp_user);
+		model.addAttribute("protocols", protocols);
+
+		return "USER_TEMPLATE/showprotocolUSER";
+
+	}
+	@GetMapping("/USER/showProtocols/incoming")
+	public String showIncomingProtocols(Model model, @CurrentSecurityContext(expression = "authentication.name") String name) {
+		User tmp_user = userService.getUserByName(name);
+		List<Protocol> protocols = protocolService.getIncomingProtocolBySector(tmp_user.getSector().getId());
+		model.addAttribute("user", tmp_user);
+		model.addAttribute("protocols", protocols);
+
+		return "USER_TEMPLATE/showprotocolUSER";
+
+	}
+	@GetMapping("/USER/showProtocols/outgoing")
+	public String showOutgoingProtocols(Model model, @CurrentSecurityContext(expression = "authentication.name") String name) {
+		User tmp_user = userService.getUserByName(name);
+		List<Protocol> protocols = protocolService.getOutgoingProtocolBySector(tmp_user.getSector().getId());
 		model.addAttribute("user", tmp_user);
 		model.addAttribute("protocols", protocols);
 
@@ -105,19 +131,24 @@ public class ControllerUSER {
 			@RequestParam("file") MultipartFile file) throws IllegalStateException, IOException {
 
 		User logeInUser = userService.getUserByName(name);
+		Sector sectorOflogeInUser= sectorService.getSectorById(logeInUser.getSector().getId());
 		Protocol tmp_protocol;
+		String current_value = "";
+		try {
+			current_value=sectorService.handleCounterOfProtocolType(sectorOflogeInUser,type);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 
 		if (!file.isEmpty()) {
 			file.transferTo(new File(ProtocolFinalApplication.fileLocation + file.getOriginalFilename()));
-
 			FileOfProtocol tmp_file = new FileOfProtocol(file.getOriginalFilename(), (long) file.getSize());
-
 			fileService.addFile(tmp_file);
 
-			tmp_protocol = new Protocol(logeInUser, followup, type, title, description, tmp_file);
+			tmp_protocol = new Protocol(logeInUser, followup, type, title, description, tmp_file,current_value);
 
 		} else {
-			tmp_protocol = new Protocol(logeInUser, followup, type, title, description);
+			tmp_protocol = new Protocol(logeInUser, followup, type, title, description,current_value);
 		}
 
 		protocolService.addProtocol(tmp_protocol);

@@ -1,4 +1,4 @@
-package com.protocol.model;
+package com.protocol.wrapper;
 
 public class WrapperApi {
 

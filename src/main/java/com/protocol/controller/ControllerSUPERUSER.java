@@ -4,6 +4,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,20 +123,27 @@ public class ControllerSUPERUSER {
 			@RequestParam("description") String description, @RequestParam("followup") String followup,
 			@RequestParam("file") MultipartFile file) throws IllegalStateException, IOException {
 
+
+
 		User logeInUser = userService.getUserByName(name);
+		Sector sectorOflogeInUser= sectorService.getSectorById(logeInUser.getSector().getId());
 		Protocol tmp_protocol;
+		String current_value = "";
+		try {
+			current_value=sectorService.handleCounterOfProtocolType(sectorOflogeInUser,type);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 
 		if (!file.isEmpty()) {
 			file.transferTo(new File(ProtocolFinalApplication.fileLocation + file.getOriginalFilename()));
-
 			FileOfProtocol tmp_file = new FileOfProtocol(file.getOriginalFilename(), (long) file.getSize());
-
 			fileService.addFile(tmp_file);
 
-			tmp_protocol = new Protocol(logeInUser, followup, type, title, description, tmp_file);
+			tmp_protocol = new Protocol(logeInUser, followup, type, title, description, tmp_file,current_value);
 
 		} else {
-			tmp_protocol = new Protocol(logeInUser, followup, type, title, description);
+			tmp_protocol = new Protocol(logeInUser, followup, type, title, description,current_value);
 		}
 
 		protocolService.addProtocol(tmp_protocol);
@@ -144,9 +152,29 @@ public class ControllerSUPERUSER {
 	}
 
 	@GetMapping("/SUPERUSER/showProtocols")
-	public String showProtocols(Model model) {
+	public String showProtocols(Model model,@CurrentSecurityContext(expression = "authentication.name") String name) {
 
-		model.addAttribute("protocols", protocolService.getProtocols());
+		User logeInUser = userService.getUserByName(name);
+		model.addAttribute("protocols", protocolService.getProtocolBySector(logeInUser.getSector().getId()));
+
+		return "SUPERUSER_TEMPLATE/showprotocolSUPERUSER";
+
+	}
+
+	@GetMapping("/SUPERUSER/showProtocols/incoming")
+	public String showIncomingProtocols(Model model,@CurrentSecurityContext(expression = "authentication.name") String name) {
+
+		User logeInUser = userService.getUserByName(name);
+		model.addAttribute("protocols", protocolService.getIncomingProtocolBySector(logeInUser.getSector().getId()));
+
+		return "SUPERUSER_TEMPLATE/showprotocolSUPERUSER";
+
+	}
+	@GetMapping("/SUPERUSER/showProtocols/outgoing")
+	public String showOutgoingProtocols(Model model,@CurrentSecurityContext(expression = "authentication.name") String name) {
+
+		User logeInUser = userService.getUserByName(name);
+		model.addAttribute("protocols", protocolService.getOutgoingProtocolBySector(logeInUser.getSector().getId()));
 
 		return "SUPERUSER_TEMPLATE/showprotocolSUPERUSER";
 

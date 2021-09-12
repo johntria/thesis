@@ -4,6 +4,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Collection;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -163,17 +164,22 @@ public class ControllerGODUSER {
 		User logeInUser = userService.getUserByName(name);
 		Sector sectorOflogeInUser= sectorService.getSectorById(logeInUser.getSector().getId());
 		Protocol tmp_protocol;
+		String current_value = "";
+		try {
+			 current_value=sectorService.handleCounterOfProtocolType(sectorOflogeInUser,type);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 
 		if (!file.isEmpty()) {
 			file.transferTo(new File(ProtocolFinalApplication.fileLocation + file.getOriginalFilename()));
-
 			FileOfProtocol tmp_file = new FileOfProtocol(file.getOriginalFilename(), (long) file.getSize());
-
 			fileService.addFile(tmp_file);
-			tmp_protocol = new Protocol(logeInUser, followup, type, title, description, tmp_file);
+
+			tmp_protocol = new Protocol(logeInUser, followup, type, title, description, tmp_file,current_value);
 
 		} else {
-			tmp_protocol = new Protocol(logeInUser, followup, type, title, description);
+			tmp_protocol = new Protocol(logeInUser, followup, type, title, description,current_value);
 		}
 
 		protocolService.addProtocol(tmp_protocol);
@@ -182,9 +188,25 @@ public class ControllerGODUSER {
 	}
 
 	@GetMapping("/GODUSER/showProtocols")
-	public String showProtocols(Model model) {
+	public String showProtocols(Model model,@CurrentSecurityContext(expression = "authentication.name") String name) {
+		 User logeInUser = userService.getUserByName(name);
+		model.addAttribute("protocols", protocolService.getProtocolBySector(logeInUser.getSector().getId()));
 
-		model.addAttribute("protocols", protocolService.getProtocols());
+		return "GODUSER_TEMPLATE/showprotocol";
+
+	}
+	@GetMapping("/GODUSER/showProtocols/incoming")
+	public String showIncomingProtocols(Model model,@CurrentSecurityContext(expression = "authentication.name") String name) {
+		User logeInUser = userService.getUserByName(name);
+		model.addAttribute("protocols", protocolService.getIncomingProtocolBySector(logeInUser.getSector().getId()));
+
+		return "GODUSER_TEMPLATE/showprotocol";
+
+	}
+	@GetMapping("/GODUSER/showProtocols/outgoing")
+	public String showOutgoingProtocols(Model model,@CurrentSecurityContext(expression = "authentication.name") String name) {
+		User logeInUser = userService.getUserByName(name);
+		model.addAttribute("protocols", protocolService.getOutgoingProtocolBySector(logeInUser.getSector().getId()));
 
 		return "GODUSER_TEMPLATE/showprotocol";
 

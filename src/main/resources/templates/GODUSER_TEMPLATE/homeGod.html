@@ -38,16 +38,20 @@
 				</li>
 				<li class="nav-item"><a class="nav-link"
 					th:href="@{/GODUSER/listOfSector}">Sectors</a></li>
+
 				<li class="nav-item dropdown"><a
-					class="nav-link dropdown-toggle" href="#"
-					id="navbarDropdownMenuLink" data-toggle="dropdown"
-					aria-haspopup="true" aria-expanded="false"> Protocol </a>
+						class="nav-link dropdown-toggle" href="#"
+						id="navbarDropdownMenuLink" data-toggle="dropdown"
+						aria-haspopup="true" aria-expanded="false"> Protocol </a>
 					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 						<a class="dropdown-item" data-toggle="modal"
-							data-target="#createprotocol">Create Protocol</a> <a
-							class="dropdown-item" th:href="@{/GODUSER/showProtocols}">Show
-							Protocol</a>
+						   data-target="#createprotocol">Create Protocol</a> <a
+							class="dropdown-item" th:href="@{/GODUSER/showProtocols/incoming}">Show Incoming
+						Protocols</a>
+						<a class="dropdown-item" th:href="@{/GODUSER/showProtocols/outgoing}">Show Outgoing
+							Protocols</a>
 					</div></li>
+
 
 
 			</ul>

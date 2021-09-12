@@ -88,12 +88,23 @@ public class ProtocolService {
 
 	public String getLatestTimeByTypeOfProtocol(String type){
 		Protocol tmp=protocolRepository.findLatestProtocolByType(type);
+
 		if (Objects.isNull(tmp)){
 			return null;
 		}else{
 			return tmp.getdateCreated();
 		}
 
+	}
+
+	public List<Protocol> getProtocolBySector(Long id){
+		return (List<Protocol>) protocolRepository.getProtocolBySector(id);
+	}
+	public List<Protocol> getIncomingProtocolBySector(Long id){
+		return (List<Protocol>) protocolRepository.getIncomingProtocolBySector(id);
+	}
+	public List<Protocol> getOutgoingProtocolBySector(Long id){
+		return (List<Protocol>) protocolRepository.getOutgoingProtocolBySector(id);
 	}
 
 

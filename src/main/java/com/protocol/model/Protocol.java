@@ -32,6 +32,11 @@ public class Protocol {
 	@ManyToOne
 	private User createdFromUser;
 
+	@Column(name="sector.id")
+	private Long sector;
+
+
+
 	@Column(name = "date_created")
 	private String dateCreated = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
@@ -53,28 +58,33 @@ public class Protocol {
 	public Protocol() {
 	};
 
-	public Protocol(User createdFromUser, String type, String title, String description) {
+	public Protocol(User createdFromUser, String type, String title, String description,String userIdentifier) {
 		super();
 		this.createdFromUser = createdFromUser;
 		this.type = type;
 		this.title = title;
 		this.description = description;
-	}
+		this.userIdentifier=type.substring(0,3)+" "+userIdentifier+"/"
+				+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+		this.sector=createdFromUser.getSector().getId();
 
-	public Protocol(User createdFromUser, String followUp, String type, String title, String description) {
+			}
+
+	public Protocol(User createdFromUser, String followUp, String type, String title, String description,String userIdentifier) {
 		super();
 		this.createdFromUser = createdFromUser;
 		this.followUp = followUp;
 		this.type = type;
 		this.title = title;
 		this.description = description;
-		userIdentifier = this.getType().substring(0, 3) + "-" + LocalDateTime.now().getDayOfYear() + "/"
+		this.userIdentifier=type.substring(0,3)+" "+userIdentifier+"/"
 				+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+		this.sector=createdFromUser.getSector().getId();
 
 	}
 
 	public Protocol(User createdFromUser, String followUp, String type, String title, String description,
-			FileOfProtocol file) {
+			FileOfProtocol file,String userIdentifier) {
 		super();
 		this.createdFromUser = createdFromUser;
 		this.followUp = followUp;
@@ -82,8 +92,9 @@ public class Protocol {
 		this.title = title;
 		this.description = description;
 		this.file = file;
-		userIdentifier = this.getType().substring(0, 3) + "-" + LocalDateTime.now().getDayOfYear() + "/"
+		this.userIdentifier=type.substring(0,3)+" "+userIdentifier+"/"
 				+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+		this.sector=createdFromUser.getSector().getId();
 	}
 
 	public String getDateCreated() {

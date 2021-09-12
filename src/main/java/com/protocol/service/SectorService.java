@@ -1,6 +1,12 @@
 package com.protocol.service;
 
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+
+import com.protocol.wrapper.WrapperQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.protocol.model.Protocol;
@@ -87,6 +93,30 @@ public class SectorService {
 	}
 
 
+	public String handleCounterOfProtocolType(Sector sector,String type) throws ParseException {
+		WrapperQuery wrappQuery=sectorRepository.innerJoinProtocolSector(sector.getId(),type);
+
+		if (Objects.isNull(wrappQuery)){
+			sectorRepository.insertTypeAndNumberInSector(sector.getId(),type);
+			return "1";
+		} else{
+			int current_value=sectorRepository.getValueOfProtocolType(sector.getId(),type);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+			Date latest_year_of_protocol = sdf.parse(wrappQuery.getDateCreated().substring(0, 4));
+			Date current_year = sdf.parse(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy")));
+			if(latest_year_of_protocol.compareTo(current_year)<0){
+				current_value=1;
+				sectorRepository.updateSectorProtocolType(sector.getId(),type,current_value);
+				return String.valueOf(current_value);
+			}else{
+				current_value=current_value+1;
+				sectorRepository.updateSectorProtocolType(sector.getId(),type,current_value);
+				return String.valueOf(current_value);
+			}
+
+		}
+
+	}
 
 
 

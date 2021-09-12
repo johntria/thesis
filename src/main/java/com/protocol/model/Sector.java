@@ -21,11 +21,12 @@ public class Sector {
 	private String name;
 
 	@ElementCollection
-	private Map<String,Integer> protocol_type = new HashMap<String,Integer>();
+	private Map<String,Integer> protocol_type ;
 
 
 	@OneToMany(mappedBy = "sector")
 	private Collection<User> user = new ArrayList<>();
+
 
 	public Sector(long id, String name, Collection<User> user) {
 
@@ -42,7 +43,17 @@ public class Sector {
 	public Sector() {
 	}
 
+
 	/* Getters & Setters */
+
+	public Map<String, Integer> getProtocol_type() {
+		return protocol_type;
+	}
+
+	public void setProtocol_type(Map<String, Integer> protocol_type) {
+		this.protocol_type = protocol_type;
+	}
+
 	public long getId() {
 		return id;
 	}

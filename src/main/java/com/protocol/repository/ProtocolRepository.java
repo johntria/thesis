@@ -25,5 +25,43 @@ public interface ProtocolRepository extends JpaRepository<Protocol, Long> {
 	Protocol findLatestProtocolByType(String type);
 
 
+	@Query(value = "SELECT   " +
+			"    protocol.*  " +
+			"FROM  " +
+			"    sector_protocol_type  " +
+			"        INNER JOIN  " +
+			"    protocol ON sector_protocol_type.sector_id = protocol.sector_id  " +
+			"        AND sector_protocol_type.protocol_type_key = protocol.type  " +
+			"        AND sector_protocol_type.sector_id = ?1  " +
+			"ORDER BY date_created DESC;",nativeQuery = true)
+	Collection<Protocol>getProtocolBySector(Long id);
+
+	@Query(value = "SELECT   " +
+			"    protocol.*  " +
+			"FROM  " +
+			"    sector_protocol_type  " +
+			"        INNER JOIN  " +
+			"    protocol ON sector_protocol_type.sector_id = protocol.sector_id  " +
+			"        AND sector_protocol_type.protocol_type_key = protocol.type  " +
+			"        AND sector_protocol_type.sector_id = ?1  " +
+			" 		 AND protocol.type='Incoming'"+
+			"ORDER BY date_created DESC;",nativeQuery = true)
+	Collection<Protocol>getIncomingProtocolBySector(Long id);
+
+	@Query(value = "SELECT   " +
+			"    protocol.*  " +
+			"FROM  " +
+			"    sector_protocol_type  " +
+			"        INNER JOIN  " +
+			"    protocol ON sector_protocol_type.sector_id = protocol.sector_id  " +
+			"        AND sector_protocol_type.protocol_type_key = protocol.type  " +
+			"        AND sector_protocol_type.sector_id = ?1  " +
+			" 		 AND protocol.type='Outgoing'"+
+			"ORDER BY date_created DESC;",nativeQuery = true)
+	Collection<Protocol>getOutgoingProtocolBySector(Long id);
+
+
+
+
 
 }

@@ -21,38 +21,41 @@
 <title>Sectors</title>
 </head>
 <body>
-	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-		<a class="navbar-brand" th:href="@{/GODUSER/home}">Home</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse"
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	<a class="navbar-brand" th:href="@{/GODUSER/home}">Home</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse"
 			data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown"
 			aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-		<div class="collapse navbar-collapse" id="navbarNavDropdown">
-			<ul class="navbar-nav">
-				<li class="nav-item"><a class="nav-link"
-					th:href="@{/GODUSER/list}">Users</a> <span class="sr-only"></span>
-				</li>
-				<li class="nav-item"><a class="nav-link"
-					th:href="@{/GODUSER/listOfSector}">Sectors</a></li>
-				<li class="nav-item dropdown"><a
+		<span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="collapse navbar-collapse" id="navbarNavDropdown">
+		<ul class="navbar-nav">
+			<li class="nav-item"><a class="nav-link"
+									th:href="@{/GODUSER/list}">Users</a> <span class="sr-only"></span>
+			</li>
+			<li class="nav-item"><a class="nav-link"
+									th:href="@{/GODUSER/listOfSector}">Sectors</a></li>
+
+			<li class="nav-item dropdown"><a
 					class="nav-link dropdown-toggle" href="#"
 					id="navbarDropdownMenuLink" data-toggle="dropdown"
 					aria-haspopup="true" aria-expanded="false"> Protocol </a>
-					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-						<a class="dropdown-item" data-toggle="modal"
-							data-target="#createprotocol">Create Protocol</a> <a
-							class="dropdown-item" th:href="@{/GODUSER/showProtocols}">Show
-							Protocol</a>
-					</div></li>
+				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+					<a class="dropdown-item" data-toggle="modal"
+					   data-target="#createprotocol">Create Protocol</a> <a
+						class="dropdown-item" th:href="@{/GODUSER/showProtocols/incoming}">Show Incoming
+					Protocols</a>
+					<a class="dropdown-item" th:href="@{/GODUSER/showProtocols/outgoing}">Show Outgoing
+						Protocols</a>
+				</div></li>
 
 
-			</ul>
-		</div>
-		<a type="button" class="btn btn-secondary"
-			th:href="@{/GODUSER/logout}">Log Out</a>
-	</nav>
 
+		</ul>
+	</div>
+	<a type="button" class="btn btn-secondary"
+	   th:href="@{/GODUSER/logout}">Log Out</a>
+</nav>
 	<div class="modal fade" id="createprotocol" tabindex="-1" role="dialog"
 		aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<form th:action="@{/GODUSER/createprotocol}" method=post
