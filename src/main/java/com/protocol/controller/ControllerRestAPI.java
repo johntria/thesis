@@ -34,7 +34,7 @@ public class ControllerRestAPI {
 	@Autowired
 	private ProtocolService protocolService;
 
-	@RequestMapping(value = "/createprotocol", method = RequestMethod.PUT)
+	@RequestMapping(value = "/createprotocol", method = RequestMethod.POST)
 	public String addProtocol(@RequestBody WrapperApi obj,
 			@CurrentSecurityContext(expression = "authentication.name") String logedInUser) {
 
